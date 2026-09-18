@@ -36,12 +36,4 @@ The application provides separate workflows for Users, Support Agents, and Admin
 
 :Ticket Workflow:
  
-Open
-  ↓
-Assigned
-  ↓
-In Progress
-  ↓
-Resolved
-  ↓
-Closed
+Open --> Assigned --> In Progress --> Resolved --> Closed

@@ -1,0 +1,108 @@
+@model IssueForge.Models.Ticket
+
+@{
+    ViewData["Title"] = "Ticket Details";
+}
+
+<h1>Ticket Details</h1>
+
+<hr />
+
+<div class="card">
+    <div class="card-body">
+
+        <h4 class="card-title mb-4">
+            @Model.Title
+        </h4>
+
+        <dl class="row">
+
+            <dt class="col-sm-3">
+                Ticket ID
+            </dt>
+
+            <dd class="col-sm-9">
+                @Model.Id
+            </dd>
+
+            <dt class="col-sm-3">
+                Description
+            </dt>
+
+            <dd class="col-sm-9">
+                @Model.Description
+            </dd>
+
+            <dt class="col-sm-3">
+                Priority
+            </dt>
+
+            <dd class="col-sm-9">
+                @Model.Priority
+            </dd>
+
+            <dt class="col-sm-3">
+                Status
+            </dt>
+
+            <dd class="col-sm-9">
+                @Model.Status
+            </dd>
+
+            <dt class="col-sm-3">
+                Created
+            </dt>
+
+            <dd class="col-sm-9">
+                @Model.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy h:mm tt")
+            </dd>
+
+            <dt class="col-sm-3">
+                Updated
+            </dt>
+
+            <dd class="col-sm-9">
+                @if (Model.UpdatedAt.HasValue)
+                {
+                    @Model.UpdatedAt.Value.ToLocalTime().ToString("MMM dd, yyyy h:mm tt")
+                }
+                else
+                {
+                    <span class="text-muted">
+                        Not updated
+                    </span>
+                }
+            </dd>
+
+            <dt class="col-sm-3">
+                Due Date
+            </dt>
+
+            <dd class="col-sm-9">
+                @if (Model.DueDate.HasValue)
+                {
+                    @Model.DueDate.Value.ToString("MMM dd, yyyy")
+                }
+                else
+                {
+                    <span class="text-muted">
+                        Not set
+                    </span>
+                }
+            </dd>
+
+        </dl>
+
+        <a asp-action="Edit"
+           asp-route-id="@Model.Id"
+           class="btn btn-primary">
+            Edit
+        </a>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Back to Tickets
+        </a>
+
+    </div>
+</div>

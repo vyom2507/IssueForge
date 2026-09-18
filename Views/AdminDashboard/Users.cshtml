@@ -1,0 +1,169 @@
+﻿@model IssueForge.Models.AdminUsersViewModel
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1>User Management</h1>
+        <p class="text-muted mb-0">
+            Manage IssueForge users and application roles.
+        </p>
+    </div>
+
+    <a asp-action="Index"
+       class="btn btn-outline-secondary">
+        Back to Dashboard
+    </a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (!Model.Users.Any())
+{
+    <div class="alert alert-info">
+        No users were found.
+    </div>
+}
+else
+{
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Current Role</th>
+                            <th>Change Role</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var user in Model.Users)
+                        {
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        @user.Email
+                                    </strong>
+
+                                    @if (user.IsProtectedAdmin)
+                                    {
+                                        <span class="badge bg-dark ms-2">
+                                            Primary Admin
+                                        </span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @user.CurrentRole
+                                </td>
+
+                                <td style="min-width: 320px;">
+
+                                    @if (user.IsProtectedAdmin)
+                                    {
+                                        <span class="text-muted">
+                                            Protected administrator account
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="UpdateUserRole"
+                                              method="post"
+                                              class="d-flex gap-2">
+
+                                            <input type="hidden"
+                                                   name="userId"
+                                                   value="@user.Id" />
+
+                                            <select name="role"
+                                                    class="form-select form-select-sm">
+
+                                                @if (user.CurrentRole == "User")
+                                                {
+                                                    <option value="User"
+                                                            selected>
+                                                        User
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="User">
+                                                        User
+                                                    </option>
+                                                }
+
+                                                @if (user.CurrentRole == "SupportAgent")
+                                                {
+                                                    <option value="SupportAgent"
+                                                            selected>
+                                                        Support Agent
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="SupportAgent">
+                                                        Support Agent
+                                                    </option>
+                                                }
+
+                                                @if (user.CurrentRole == "Admin")
+                                                {
+                                                    <option value="Admin"
+                                                            selected>
+                                                        Admin
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="Admin">
+                                                        Admin
+                                                    </option>
+                                                }
+
+                                            </select>
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-primary">
+                                                Update
+                                            </button>
+
+                                        </form>
+                                    }
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+}

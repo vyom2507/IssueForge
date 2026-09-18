@@ -1,0 +1,199 @@
+﻿@model IssueForge.Models.UserDashboardViewModel
+
+@{
+    ViewData["Title"] = "My Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+
+    <div>
+        <h1>My Dashboard</h1>
+
+        <p class="text-muted mb-0">
+            Track your IssueForge support requests.
+        </p>
+    </div>
+
+    <div class="d-flex gap-2">
+
+        <a asp-controller="Tickets"
+           asp-action="Index"
+           class="btn btn-outline-primary">
+            My Tickets
+        </a>
+
+        <a asp-controller="Tickets"
+           asp-action="Create"
+           class="btn btn-primary">
+            Create Ticket
+        </a>
+
+    </div>
+
+</div>
+
+<div class="row g-3 mb-4">
+
+    <div class="col-md-6 col-xl-4">
+        <div class="card dashboard-stat h-100">
+            <div class="card-body">
+                <span>Total Tickets</span>
+                <h2>@Model.TotalTickets</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-4">
+        <div class="card dashboard-stat h-100">
+            <div class="card-body">
+                <span>Open</span>
+                <h2>@Model.OpenTickets</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-4">
+        <div class="card dashboard-stat h-100">
+            <div class="card-body">
+                <span>Assigned</span>
+                <h2>@Model.AssignedTickets</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-4">
+        <div class="card dashboard-stat h-100">
+            <div class="card-body">
+                <span>In Progress</span>
+                <h2>@Model.InProgressTickets</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-4">
+        <div class="card dashboard-stat h-100">
+            <div class="card-body">
+                <span>Resolved</span>
+                <h2>@Model.ResolvedTickets</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-4">
+        <div class="card dashboard-stat h-100">
+            <div class="card-body">
+                <span>Closed</span>
+                <h2>@Model.ClosedTickets</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="card">
+
+    <div class="card-header bg-white">
+        <h4 class="mb-0">
+            Recent Tickets
+        </h4>
+    </div>
+
+    <div class="card-body p-0">
+
+        @if (!Model.RecentTickets.Any())
+        {
+            <div class="p-4">
+                <div class="alert alert-info mb-0">
+                    You have not created any tickets yet.
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Due Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var ticket in Model.RecentTickets)
+                        {
+                            <tr>
+
+                                <td>
+                                    #@ticket.Id
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        @ticket.Title
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    <span class="ticket-badge priority-@ticket.Priority.ToString().ToLowerInvariant()">
+                                        @ticket.Priority
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="ticket-badge status-@ticket.Status.ToString().ToLowerInvariant()">
+                                        @(ticket.Status == IssueForge.Models.TicketStatus.InProgress
+                                            ? "In Progress"
+                                            : ticket.Status.ToString())
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @(ticket.CreatedAt
+                                        .ToLocalTime()
+                                        .ToString("MMM dd, yyyy"))
+                                </td>
+
+                                <td>
+                                    @if (ticket.DueDate.HasValue)
+                                    {
+                                        @(ticket.DueDate.Value.ToString("MMM dd, yyyy"))
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            Not set
+                                        </span>
+                                    }
+                                </td>
+
+                                <td>
+                                    <a asp-controller="Tickets"
+                                       asp-action="Details"
+                                       asp-route-id="@ticket.Id"
+                                       class="btn btn-sm btn-outline-primary">
+                                        View
+                                    </a>
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
+    </div>
+
+</div>

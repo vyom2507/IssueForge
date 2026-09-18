@@ -1,0 +1,194 @@
+﻿@model IssueForge.Models.AdminTicketsViewModel
+
+@{
+    ViewData["Title"] = "All Tickets";
+}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+
+    <div>
+        <h1>All Tickets</h1>
+
+        <p class="text-muted mb-0">
+            View and assign support tickets across IssueForge.
+        </p>
+    </div>
+
+    <a asp-action="Index"
+       class="btn btn-outline-secondary">
+        Back to Dashboard
+    </a>
+
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (Model.SupportAgents.Count == 0)
+{
+    <div class="alert alert-warning">
+        No Support Agent accounts exist yet. Tickets can be viewed,
+        but they cannot be assigned until a user is given the SupportAgent role.
+    </div>
+}
+
+@if (!Model.Tickets.Any())
+{
+    <div class="alert alert-info">
+        No tickets have been created yet.
+    </div>
+}
+else
+{
+    <div class="card">
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Created By</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Due Date</th>
+                            <th>Support Agent</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var ticket in Model.Tickets)
+                        {
+                            <tr>
+
+                                <td>
+                                    #@ticket.Id
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        @ticket.Title
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    @ticket.CreatedByEmail
+                                </td>
+
+                                <td>
+                                    <span class="ticket-badge priority-@ticket.Priority.ToString().ToLowerInvariant()">
+                                        @ticket.Priority
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="ticket-badge status-@ticket.Status.ToString().ToLowerInvariant()">
+                                        @(ticket.Status == IssueForge.Models.TicketStatus.InProgress
+                                            ? "In Progress"
+                                            : ticket.Status.ToString())
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @(ticket.CreatedAt
+                                        .ToLocalTime()
+                                        .ToString("MMM dd, yyyy"))
+                                </td>
+
+                                <td>
+                                    @if (ticket.DueDate.HasValue)
+                                    {
+                                        @(ticket.DueDate.Value.ToString("MMM dd, yyyy"))
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            Not set
+                                        </span>
+                                    }
+                                </td>
+
+                                <td style="min-width: 290px;">
+
+                                    @if (Model.SupportAgents.Count > 0)
+                                    {
+                                        <form asp-action="Assign"
+                                              method="post"
+                                              class="d-flex gap-2">
+
+                                            <input type="hidden"
+                                                   name="ticketId"
+                                                   value="@ticket.Id" />
+
+                                            <select name="supportAgentId"
+                                                    class="form-select form-select-sm">
+
+                                                <option value="">
+                                                    Unassigned
+                                                </option>
+
+                                                @foreach (var agent in Model.SupportAgents)
+                                                {
+                                                    if (ticket.AssignedToUserId == agent.Id)
+                                                    {
+                                                        <option value="@agent.Id"
+                                                                selected>
+                                                            @agent.Email
+                                                        </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@agent.Id">
+                                                            @agent.Email
+                                                        </option>
+                                                    }
+                                                }
+
+                                            </select>
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-primary">
+                                                Assign
+                                            </button>
+
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            No agents available
+                                        </span>
+                                    }
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+}

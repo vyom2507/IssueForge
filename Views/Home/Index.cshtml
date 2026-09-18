@@ -1,0 +1,254 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<section class="hero-section">
+
+    <div class="row align-items-center g-5">
+
+        <div class="col-lg-7">
+
+            <div class="hero-badge">
+                IT Support Management Platform
+            </div>
+
+            <h1 class="hero-title">
+                Resolve support issues
+                <span>without losing track.</span>
+            </h1>
+
+            <p class="hero-description">
+                IssueForge centralizes support requests, ticket assignment,
+                status tracking, and team workflows into one secure platform.
+            </p>
+
+            <div class="d-flex flex-wrap gap-3">
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="AdminDashboard"
+                           asp-action="Index"
+                           class="btn btn-primary btn-lg">
+                            Open Admin Dashboard
+                        </a>
+
+                        <a asp-controller="AdminDashboard"
+                           asp-action="AllTickets"
+                           class="btn btn-outline-secondary btn-lg">
+                            View All Tickets
+                        </a>
+                    }
+                    else if (User.IsInRole("SupportAgent"))
+                    {
+                        <a asp-controller="SupportAgent"
+                           asp-action="Index"
+                           class="btn btn-primary btn-lg">
+                            Open Agent Dashboard
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Tickets"
+                           asp-action="Create"
+                           class="btn btn-primary btn-lg">
+                            Create Ticket
+                        </a>
+
+                        <a asp-controller="UserDashboard"
+                           asp-action="Index"
+                           class="btn btn-outline-secondary btn-lg">
+                            My Dashboard
+                        </a>
+                    }
+                }
+                else
+                {
+                    <a asp-area="Identity"
+                       asp-page="/Account/Login"
+                       class="btn btn-primary btn-lg">
+                        Sign In
+                    </a>
+
+                    <a asp-area="Identity"
+                       asp-page="/Account/Register"
+                       class="btn btn-outline-secondary btn-lg">
+                        Create Account
+                    </a>
+                }
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-5">
+
+            <div class="hero-panel">
+
+                <div class="hero-panel-header">
+
+                    <div>
+                        <span class="panel-label">
+                            Support Operations
+                        </span>
+
+                        <h4>
+                            Ticket Workflow
+                        </h4>
+                    </div>
+
+                    <span class="system-status">
+                        Operational
+                    </span>
+
+                </div>
+
+                <div class="workflow-item">
+
+                    <div class="workflow-number">
+                        01
+                    </div>
+
+                    <div>
+                        <strong>
+                            Submit
+                        </strong>
+
+                        <p>
+                            Users create detailed support requests.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="workflow-item">
+
+                    <div class="workflow-number">
+                        02
+                    </div>
+
+                    <div>
+                        <strong>
+                            Assign
+                        </strong>
+
+                        <p>
+                            Administrators route tickets to support agents.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="workflow-item">
+
+                    <div class="workflow-number">
+                        03
+                    </div>
+
+                    <div>
+                        <strong>
+                            Resolve
+                        </strong>
+
+                        <p>
+                            Agents manage the ticket through resolution.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="feature-section">
+
+    <div class="section-heading">
+
+        <span>
+            PLATFORM CAPABILITIES
+        </span>
+
+        <h2>
+            Built around a real support workflow
+        </h2>
+
+        <p>
+            Every account receives only the tools and data required for its role.
+        </p>
+
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    U
+                </div>
+
+                <h4>
+                    User Portal
+                </h4>
+
+                <p>
+                    Submit support requests, track ticket progress,
+                    review details, and manage your own tickets.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    S
+                </div>
+
+                <h4>
+                    Support Workspace
+                </h4>
+
+                <p>
+                    Support agents receive assigned requests and
+                    move tickets through the resolution lifecycle.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    A
+                </div>
+
+                <h4>
+                    Administration
+                </h4>
+
+                <p>
+                    Administrators manage users, permissions,
+                    ticket assignments, and system-wide activity.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

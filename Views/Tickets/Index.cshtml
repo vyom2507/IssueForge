@@ -1,0 +1,134 @@
+@model IEnumerable<IssueForge.Models.Ticket>
+
+@{
+    ViewData["Title"] = "My Tickets";
+}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+
+    <div>
+        <h1>My Tickets</h1>
+        <p class="text-muted mb-0">
+            Track and manage your support requests.
+        </p>
+    </div>
+
+    <a asp-action="Create"
+       class="btn btn-primary">
+        Create Ticket
+    </a>
+
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        You have not created any tickets yet.
+    </div>
+}
+else
+{
+    <div class="card">
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Due Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var ticket in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    #@ticket.Id
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        @ticket.Title
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    <span class="ticket-badge priority-@ticket.Priority.ToString().ToLowerInvariant()">
+                                        @ticket.Priority
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="ticket-badge status-@ticket.Status.ToString().ToLowerInvariant()">
+                                        @(ticket.Status == IssueForge.Models.TicketStatus.InProgress
+                                            ? "In Progress"
+                                            : ticket.Status.ToString())
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @(ticket.CreatedAt
+                                        .ToLocalTime()
+                                        .ToString("MMM dd, yyyy"))
+                                </td>
+
+                                <td>
+                                    @if (ticket.DueDate.HasValue)
+                                    {
+                                        @(ticket.DueDate.Value.ToString("MMM dd, yyyy"))
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            Not set
+                                        </span>
+                                    }
+                                </td>
+
+                                <td class="text-end">
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@ticket.Id"
+                                       class="btn btn-sm btn-outline-primary">
+                                        Details
+                                    </a>
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@ticket.Id"
+                                       class="btn btn-sm btn-outline-secondary">
+                                        Edit
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@ticket.Id"
+                                       class="btn btn-sm btn-outline-danger">
+                                        Delete
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+}
